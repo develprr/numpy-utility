@@ -14,13 +14,27 @@ class MSArray(BaseModel):
     arbitrary_types_allowed = True
         
   @staticmethod
-  def new(item_count: int, axis_count: int, elements_per_axis_count: int):
-    array = np.arange(item_count).reshape(axis_count, elements_per_axis_count)
+  def new_shaped(item_count: int, axis_count: int, elements_per_axis_count: int):
     return MSArray(**{
-      'array': array
+      'array': np.arange(item_count).reshape(axis_count, elements_per_axis_count)
     })
-      
-def test_msarray():
-  msarray = MSArray.new(15,3,5)
-  array = msarray.array
-  assert(type(array)) == ndarray
+  
+  @staticmethod
+  def new_from_list(list: list):
+    return MSArray(**{
+      'array': np.array(list)
+    })
+    
+def test_new_shaped():
+  array = MSArray.new_shaped(15,3,5).array
+  assert(type(array)) == ndarray 
+  assert(array.shape) == (3,5)
+  assert(array.itemsize) == 8
+  assert(array.dtype.name) == 'int64'
+  assert(array.ndim) == 2
+
+def test_new_from_list():
+  array = MSArray.new_from_list([1,2,3]).array
+  assert(array.dtype.name)  == 'int64'
+  array = MSArray.new_from_list([1,2,3.]).array
+  assert(array.dtype.name)  == 'float64'
