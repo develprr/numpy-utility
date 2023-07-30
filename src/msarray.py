@@ -2,15 +2,15 @@
 
 # MSArray is a type safe wrapper & initializer for ndarray 
 
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, StrictStr, ConfigDict, ValidationError, validate_call
 
 import numpy as np
 from numpy import ndarray
-
+  
 class MSArray(BaseModel):
   model_config = ConfigDict(arbitrary_types_allowed=True)
-  
+    
   array: ndarray
         
   @staticmethod
@@ -25,6 +25,13 @@ class MSArray(BaseModel):
   def new_from_list(list: list[int]):
     return MSArray(**{
       'array': np.array(list)
+    })
+  
+  @staticmethod
+  @validate_call(config=dict(arbitrary_types_allowed=True))
+  def new_from_ndarray(array: ndarray):
+    return MSArray(**{
+      'array': array
     })
 
 def test_new_shaped():
@@ -44,6 +51,15 @@ def test_new_from_list():
     return
   raise Exception('Float value was incorrectly accepted in list argument')
 
+def test_new_from_ndarray():
+  array = MSArray.new_from_ndarray(np.array([1,2,3])).array
+  assert(array.dtype.name)  == 'int64'
+  try:
+    array = MSArray.new_from_ndarray([1,2,3]).array
+  except:
+    return
+  raise Exception('Other than ndarray as constructor parameter value was incorrectly accepted')
+  
 def test_validation():
   try:
     array = MSArray.new_shaped(15.1,3,5).array
