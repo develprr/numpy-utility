@@ -2,7 +2,7 @@
 
 # MSArray is a type safe wrapper & initializer for ndarray 
 
-from typing import List, Optional
+from typing import List
 from pydantic import BaseModel, StrictStr, ConfigDict, ValidationError, validate_call
 
 import numpy as np
