@@ -49,7 +49,7 @@ class MSArray(BaseModel):
     })
    
   @staticmethod
-  @validate_call(config=dict(arbitrary_types_allowed=True))
+  @validate_call
   def new_float_based_two_dimensional(list1: list[float], list2: list[float]):
     return MSArray(**{
       'array': np.array([list1, list2])
