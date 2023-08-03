@@ -22,7 +22,7 @@ class MSArray(BaseModel):
   
   @staticmethod
   @validate_call
-  def new_from_list(list: list[int]):
+  def new_from_int_list(list: list[int]):
     return MSArray(**{
       'array': np.array(list)
     })
@@ -33,6 +33,13 @@ class MSArray(BaseModel):
     return MSArray(**{
       'array': array
     })
+    
+  @staticmethod
+  @validate_call(config=dict(arbitrary_types_allowed=True))
+  def new_zero_dimensional(value: int):
+    return MSArray(**{
+      'array': np.array(value)
+    })  
 
 def test_new_shaped():
   array = MSArray.new_shaped(15,3,5).array
@@ -42,27 +49,37 @@ def test_new_shaped():
   assert(array.dtype.name) == 'int64'
   assert(array.ndim) == 2
 
-def test_new_from_list():
-  array = MSArray.new_from_list([1,2,3]).array
+def test_new_from_int_list__works_when_list_of_integers_is_given():
+  array = MSArray.new_from_int_list([1, 2, 3]).array
   assert(array.dtype.name)  == 'int64'
-  try:
-    array = MSArray.new_from_list([1,2,3.1]).array
-  except:
-    return
-  raise Exception('Float value was incorrectly accepted in list argument')
 
-def test_new_from_ndarray():
+def test_new_from_int_list__fails_when_not_all_values_are_integers():
+  try:
+    array = MSArray.new_from_int_list([1, 2, 3.1]).array
+  except:
+    print("new_from_int_list: an exception was raised as expected!")
+    return
+  raise Exception('test fail: float value was incorrectly accepted in list argument')
+
+def test_new_from_ndarray__works_when_ndarray_is_given():
   array = MSArray.new_from_ndarray(np.array([1,2,3])).array
   assert(array.dtype.name)  == 'int64'
+
+def test_new_from_ndarray__fails_when_list_is_given():
   try:
     array = MSArray.new_from_ndarray([1,2,3]).array
   except:
+    print("new_from_ndarray: an exception was raised as expected!")
     return
-  raise Exception('Other than ndarray as constructor parameter value was incorrectly accepted')
+  raise Exception('test fail: constructor did not raise expection on wrong input parameter type')
+
+def test_new_zero_dimensional():
+  array = MSArray.new_zero_dimensional(42).array
+  assert(array == 42)
   
 def test_validation():
   try:
     array = MSArray.new_shaped(15.1,3,5).array
   except:
     return
-  raise Exception('Float value was incorrectly accepted')
+  raise Exception('float value was incorrectly accepted')
