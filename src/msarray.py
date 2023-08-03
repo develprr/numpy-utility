@@ -110,7 +110,7 @@ def test_new_float_based_two_dimensional__pass_when_two_float_lists_are_given():
   array = MSArray.new_float_based_two_dimensional([1.1, 2, 3], [4, 5, 6.3]).array
   assert(array.dtype.name) == "float64"
 
-# Surprisingly, this must pass because int list is also a float list although a float list is not an int list.
+# Surprisingly, this must pass because an int list is also a float list although a float list is not an int list.
 # Just like every dog is an animal but not every animal is a dog :) 
 def test_new_float_based_two_dimensional__pass_when_two_int_lists_are_given():
   array = MSArray.new_float_based_two_dimensional([1, 2, 3], [4, 5, 6]).array
