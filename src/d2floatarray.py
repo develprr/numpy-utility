@@ -20,11 +20,11 @@ class D2FloatArray(BaseModel):
       'ndarray': np.array([list1, list2])
     })
 
-  # Perhaps surprisingly, this must pass because an int list is also a float list although a float list is not an int list.
-  # Just like every dog is an animal but not every animal is a dog :) 
-  def test_new_from_lists__pass_when_two_int_lists_are_given():
-    array = D2FloatArray.new_from_lists([1, 2, 3], [4, 5, 6]).ndarray
-    assert(array.dtype.name) == "float64"
+# Perhaps surprisingly, this must pass because an int list is also a float list although a float list is not an int list.
+# Just like every dog is an animal but not every animal is a dog :) 
+def test_new_from_lists__pass_when_two_int_lists_are_given():
+  array = D2FloatArray.new_from_lists([1, 2, 3], [4, 5, 6]).ndarray
+  assert(array.dtype.name) == "float64"
 
 def test_new_from_lists__fail_when_arbitrary_lists_are_given():
   try:
